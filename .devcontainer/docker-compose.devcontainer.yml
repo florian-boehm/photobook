@@ -4,19 +4,19 @@ version: '3.8'
 services:
   photobook-dev:
     build:
-      context: ..
+      context: .
       target: development
     container_name: photobook-dev
     ports:
       - "8000:8000"
     volumes:
       # Mount application code for live reload
-      - ../backend:/app/backend:cached
-      - ../frontend:/app/frontend:cached
+      - ./backend:/app/backend:cached
+      - ./frontend:/app/frontend:cached
       # Mount media directory
-      - ../media:/media:cached
+      - ./media:/media:cached
       # Mount data directory for mapping file
-      - ../data:/data:cached
+      - ./data:/data:cached
     environment:
       - DEBUG=True
       - MEDIA_ROOT_PATH=/media

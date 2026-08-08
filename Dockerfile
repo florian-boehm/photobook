@@ -21,7 +21,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user for security
-RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+RUN groupadd -r appgroup && \
+    useradd -r -g appgroup -m -d /home/appuser appuser && \
+    mkdir -p /home/appuser && \
+    chown appuser:appgroup /home/appuser
 
 # ============================================
 # Development stage

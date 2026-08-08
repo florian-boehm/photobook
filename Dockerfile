@@ -39,12 +39,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first for better caching
-COPY backend/requirements.txt .
-
-# Install Python dependencies
-RUN pip install --user -r requirements.txt
-
 # Copy application code
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
@@ -57,6 +51,9 @@ RUN chown -R appuser:appgroup /app /media /data
 
 # Switch to non-root user
 USER appuser
+
+# Install Python dependencies
+RUN pip install --user -r ./backend/requirements.txt
 
 # Expose port
 EXPOSE 8000
@@ -66,8 +63,9 @@ ENV PYTHONPATH=/app \
     MEDIA_ROOT_PATH=/media \
     MAPPING_FILE_PATH=/data/mapping.json
 
+SHELL ["/bin/bash", "-c"]
 # Default command for development (with auto-reload)
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 # ============================================
 # Production stage
@@ -76,12 +74,6 @@ FROM base as production
 
 # Set working directory
 WORKDIR /app
-
-# Copy requirements
-COPY backend/requirements.txt .
-
-# Install Python dependencies (without dev dependencies)
-RUN pip install --user --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY backend/ ./backend/
@@ -95,6 +87,9 @@ RUN chown -R appuser:appgroup /app /media /data
 
 # Switch to non-root user
 USER appuser
+
+# Install Python dependencies (without dev dependencies)
+RUN pip install --user --no-cache-dir -r ./backend/requirements.txt
 
 # Expose port
 EXPOSE 8000

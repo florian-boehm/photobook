@@ -1,6 +1,6 @@
 {
     "name": "Photobook - Python Development",
-    "dockerComposeFile": ["docker-compose.yml", "docker-compose.devcontainer.yml"],
+    "dockerComposeFile": ["docker-compose.devcontainer.yml"],
     "service": "photobook-dev",
     "workspaceFolder": "/app",
     "shutdownAction": "stopCompose",
@@ -20,11 +20,11 @@
                 "ms-python.flake8",
                 "ms-azuretools.vscode-docker",
                 "redhat.vscode-yaml",
-                "tamasfe.even-better-toml",
-                "mtxr.sqltools",
-                "mtxr.sqltools-driver-pg",
-                "eamodio.gitlens",
-                "usernamehw.errorlens",
+                // "tamasfe.even-better-toml",
+                // "mtxr.sqltools",
+                // "mtxr.sqltools-driver-pg",
+                // "eamodio.gitlens",
+                // "usernamehw.errorlens",
                 "streetsidesoftware.code-spell-checker"
             ],
             "settings": {
@@ -54,7 +54,6 @@
         }
     },
     
-    "postCreateCommand": "pip install --user -r backend/requirements.txt",
     "postStartCommand": "echo 'Dev container started. Run: python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload'",
     
     "remoteUser": "appuser",

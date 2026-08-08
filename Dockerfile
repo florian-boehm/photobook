@@ -64,7 +64,7 @@ ENV PYTHONPATH=/app \
     MAPPING_FILE_PATH=/data/mapping.json
 
 # Default command for development (with auto-reload)
-CMD ["python", "-m", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 # ============================================
 # Production stage
@@ -103,4 +103,4 @@ ENV PYTHONPATH=/app \
     DEBUG=False
 
 # Default command for production
-CMD ["python", "-m", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

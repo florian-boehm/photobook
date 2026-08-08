@@ -1,6 +1,6 @@
 {
     "name": "Photobook - Python Development",
-    "dockerComposeFile": ["../docker-compose.yml", "docker-compose.devcontainer.yml"],
+    "dockerComposeFile": ["docker-compose.yml", "docker-compose.devcontainer.yml"],
     "service": "photobook-dev",
     "workspaceFolder": "/app",
     "shutdownAction": "stopCompose",

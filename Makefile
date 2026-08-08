@@ -25,7 +25,7 @@ install:
 
 # Run the application
 run:
-	python -m uvicorn backend.app.main:app --reload
+	python -m uvicorn app.main:app --reload
 
 # Run tests
 test:

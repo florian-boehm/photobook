@@ -1,12 +1,19 @@
 """Main FastAPI application entry point."""
 
 import logging
+import sys
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import AsyncGenerator
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+
+# Add the backend directory to Python path for imports
+backend_path = str(Path(__file__).parent.parent)
+if backend_path not in sys.path:
+    sys.path.insert(0, backend_path)
 
 from app.api.endpoints import media_router
 from app.core.config import settings
@@ -90,7 +97,7 @@ if __name__ == "__main__":
     import uvicorn
     
     uvicorn.run(
-        "app.main:app",
+        "backend.app.main:app",
         host=settings.host,
         port=settings.port,
         reload=settings.debug,

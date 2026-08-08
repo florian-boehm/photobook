@@ -108,7 +108,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r backend/requirements.txt
 
 # Run the application
-python -m uvicorn backend.app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 ## API Endpoints

@@ -1,0 +1,33 @@
+version: '3.8'
+
+# Override for devcontainer
+services:
+  photobook-dev:
+    build:
+      context: ..
+      target: development
+    container_name: photobook-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount application code for live reload
+      - ../backend:/app/backend:cached
+      - ../frontend:/app/frontend:cached
+      # Mount media directory
+      - ../media:/media:cached
+      # Mount data directory for mapping file
+      - ../data:/data:cached
+    environment:
+      - DEBUG=True
+      - MEDIA_ROOT_PATH=/media
+      - MAPPING_FILE_PATH=/data/mapping.json
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    networks:
+      - photobook-network
+    # Keep container running for development
+    command: sleep infinity
+
+networks:
+  photobook-network:
+    driver: bridge

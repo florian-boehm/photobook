@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobook - Media Streaming Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .albums-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .album-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .album-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: rgba(0, 217, 255, 0.5);
+        }
+        
+        .album-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #00d9ff;
+        }
+        
+        .album-count {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .files-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .file-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-id {
+            color: #00ff88;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .file-name {
+            color: #fff;
+        }
+        
+        .file-size {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .file-type {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .file-type.video {
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff6464;
+        }
+        
+        .file-type.audio {
+            background: rgba(100, 200, 255, 0.2);
+            color: #64c8ff;
+        }
+        
+        .file-type.image {
+            background: rgba(200, 255, 100, 0.2);
+            color: #c8ff64;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            color: #1a1a2e;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(0, 217, 255, 0.3);
+            border-top: 3px solid #00d9ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #ff6464;
+            padding: 20px;
+            background: rgba(255, 100, 100, 0.1);
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .back-btn {
+            margin-bottom: 20px;
+        }
+        
+        .media-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .media-preview img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            background: #000;
+            border-radius: 8px;
+        }
+        
+        .media-preview video {
+            max-width: 100%;
+            max-height: 400px;
+            background: #000;
+            border-radius: 8px;
+        }
+        
+        .media-preview audio {
+            width: 100%;
+            background: #000;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Photobook</h1>
+            <p class="subtitle">Media Streaming Service</p>
+        </header>
+        
+        <div id="app">
+            <!-- Main content will be loaded here -->
+        </div>
+    </div>
+    
+    <script>
+        // Simple SPA-like navigation
+        const API_BASE = '/api/v1';
+        
+        class App {
+            constructor() {
+                this.currentView = 'albums';
+                this.currentAlbum = null;
+                this.appEl = document.getElementById('app');
+                
+                this.init();
+            }
+            
+            init() {
+                // Check if there's a hash in the URL
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    const parts = hash.split('/');
+                    if (parts[0] === 'album' && parts[1]) {
+                        this.currentAlbum = parts[1];
+                        this.currentView = 'album';
+                    }
+                }
+                
+                this.render();
+                
+                // Listen for hash changes
+                window.addEventListener('hashchange', () => {
+                    const hash = window.location.hash.substring(1);
+                    const parts = hash.split('/');
+                    
+                    if (parts[0] === 'album' && parts[1]) {
+                        this.currentAlbum = parts[1];
+                        this.currentView = 'album';
+                    } else {
+                        this.currentAlbum = null;
+                        this.currentView = 'albums';
+                    }
+                    
+                    this.render();
+                });
+            }
+            
+            async render() {
+                if (this.currentView === 'albums') {
+                    await this.renderAlbums();
+                } else if (this.currentView === 'album') {
+                    await this.renderAlbum(this.currentAlbum);
+                }
+            }
+            
+            async renderAlbums() {
+                this.appEl.innerHTML = '<div class="loading"><div class="spinner"></div>Loading albums...</div>';
+                
+                try {
+                    const response = await fetch(`${API_BASE}/albums`);
+                    if (!response.ok) {
+                        throw new Error('Failed to load albums');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (!data.albums || data.albums.length === 0) {
+                        this.appEl.innerHTML = `
+                            <div class="section">
+                                <h2 class="section-title">Albums</h2>
+                                <p>No albums found. Add some media files to get started.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    let html = `
+                        <div class="section">
+                            <h2 class="section-title">Albums</h2>
+                            <div class="albums-grid">
+                    `;
+                    
+                    for (const album of data.albums) {
+                        html += `
+                            <div class="album-card" onclick="app.navigateToAlbum('${album}')">
+                                <div class="album-name">${this.escapeHtml(album)}</div>
+                                <div class="album-count">Click to view files</div>
+                            </div>
+                        `;
+                    }
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                    
+                    this.appEl.innerHTML = html;
+                    
+                } catch (error) {
+                    this.appEl.innerHTML = `
+                        <div class="error">
+                            Failed to load albums: ${error.message}
+                            <br><br>
+                            <button class="btn btn-primary" onclick="app.renderAlbums()">Retry</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            async renderAlbum(albumName) {
+                this.appEl.innerHTML = '<div class="loading"><div class="spinner"></div>Loading album...</div>';
+                
+                try {
+                    const response = await fetch(`${API_BASE}/albums/${encodeURIComponent(albumName)}`);
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            throw new Error(`Album '${albumName}' not found`);
+                        }
+                        throw new Error('Failed to load album');
+                    }
+                    
+                    const data = await response.json();
+                    const album = data.album;
+                    
+                    let html = `
+                        <div class="section">
+                            <button class="btn btn-secondary back-btn" onclick="app.navigateToAlbums()">← Back to Albums</button>
+                            <h2 class="section-title">Album: ${this.escapeHtml(album.name)}</h2>
+                            <p class="album-count">${album.file_count} files</p>
+                            
+                            <div class="files-list">
+                    `;
+                    
+                    for (const file of album.files) {
+                        const fileType = file.is_video ? 'video' : file.is_audio ? 'audio' : 'image';
+                        const typeClass = `file-type ${fileType}`;
+                        const typeLabel = fileType;
+                        
+                        html += `
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <div>
+                                        <span class="file-id">#${file.id}</span>
+                                        <span class="file-name">${this.escapeHtml(file.file_name)}</span>
+                                    </div>
+                                    <div class="file-size">${this.formatFileSize(file.file_size)}</div>
+                                </div>
+                                <div class="file-type ${typeClass}">${typeLabel}</div>
+                                <div class="actions">
+                                    <a href="/api/v1/albums/${encodeURIComponent(album.name)}/files/${file.id}/stream" 
+                                       class="btn btn-primary" 
+                                       target="_blank">Stream</a>
+                                    <a href="/api/v1/albums/${encodeURIComponent(album.name)}/files/${file.id}/download" 
+                                       class="btn btn-secondary" 
+                                       download>Download</a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                    
+                    this.appEl.innerHTML = html;
+                    
+                } catch (error) {
+                    this.appEl.innerHTML = `
+                        <div class="error">
+                            ${error.message}
+                            <br><br>
+                            <button class="btn btn-primary" onclick="app.navigateToAlbums()">Back to Albums</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            navigateToAlbum(albumName) {
+                this.currentAlbum = albumName;
+                this.currentView = 'album';
+                window.location.hash = `album/${encodeURIComponent(albumName)}`;
+            }
+            
+            navigateToAlbums() {
+                this.currentAlbum = null;
+                this.currentView = 'albums';
+                window.location.hash = '';
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+                if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+                return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+            }
+        }
+        
+        // Initialize the app
+        let app;
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new App();
+        });
+    </script>
+</body>
+</html>

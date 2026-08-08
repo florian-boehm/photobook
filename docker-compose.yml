@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Main application service
+  photobook:
+    build:
+      context: .
+      target: development
+    container_name: photobook
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount application code for live reload
+      - ./backend:/app/backend:ro
+      - ./frontend:/app/frontend:ro
+      # Mount media directory (read-only for security)
+      - ./media:/media:ro
+      # Mount data directory for mapping file
+      - ./data:/data:rw
+    environment:
+      - DEBUG=True
+      - MEDIA_ROOT_PATH=/media
+      - MAPPING_FILE_PATH=/data/mapping.json
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    networks:
+      - photobook-network
+
+  # Production service (optional)
+  photobook-prod:
+    build:
+      context: .
+      target: production
+    container_name: photobook-prod
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount media directory (read-only)
+      - ./media:/media:ro
+      # Mount data directory for mapping file
+      - ./data:/data:rw
+    environment:
+      - DEBUG=False
+      - MEDIA_ROOT_PATH=/media
+      - MAPPING_FILE_PATH=/data/mapping.json
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    networks:
+      - photobook-network
+    profiles:
+      - production
+
+networks:
+  photobook-network:
+    driver: bridge

@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "albums": {
+    "vacation-2024": {
+      "1": "vacation-2024/beach.mp4",
+      "2": "vacation-2024/sunset.jpg",
+      "3": "vacation-2024/waves.mp3"
+    },
+    "family": {
+      "1": "family/photo1.jpg",
+      "2": "family/photo2.png",
+      "3": "family/video1.mp4"
+    },
+    "music": {
+      "1": "music/song1.mp3",
+      "2": "music/song2.flac",
+      "3": "music/song3.ogg"
+    }
+  }
+}

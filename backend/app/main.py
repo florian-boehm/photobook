@@ -9,6 +9,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 # Add the backend directory to Python path for imports
 backend_path = str(Path(__file__).parent.parent)
@@ -61,18 +62,10 @@ app.add_middleware(
 # Include API routers
 app.include_router(media_router)
 
-
-# Root endpoint
-@app.get("/", tags=["root"])
-async def root():
-    """Root endpoint with basic information."""
-    return {
-        "name": settings.app_name,
-        "version": settings.app_version,
-        "docs": "/docs",
-        "redoc": "/redoc",
-        "api": "/api/v1",
-    }
+# Serve static frontend files
+frontend_path = Path(__file__).parent.parent.parent / "frontend"
+if frontend_path.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="frontend")
 
 
 # Health check endpoint

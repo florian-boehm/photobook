@@ -1,7 +1,14 @@
 # Photobook - Media Streaming Service
 
 A web application for serving video, audio, and image files through unique links with album organization.
+The original purpose was to serve video files alongside a printed photobook with QR codes.
 
+## Attention
+
+- This is a work in progress project for personal usage.
+- It might not be developed actively.
+- AI is used for code generation!
+  
 ## Features
 
 - **Media Streaming**: Stream video, audio, and image files directly to the client without requiring download
